@@ -93,7 +93,7 @@ function showToDoList(project) {
 function updateTableTodo(projectId) {
     deletePrevTable();
     firstStart = false;
-    let headers = ['Project Id', 'Title', 'Description', 'DueDate', 'Priority'];
+    let headers = ['Title', 'Priority'];
 
     let table = document.createElement('table');
     table.setAttribute("id", "tableProv");
@@ -109,25 +109,43 @@ function updateTableTodo(projectId) {
     table.appendChild(headerRow);
 
     myProjects[projectId - 1].todoList.forEach(ToDo => {
-        console.log("vai buscar");
         let row = document.createElement('tr');
-        Object.values(ToDo).forEach(text => {
-            let cell = document.createElement('td');
-            let textNode = document.createTextNode(text);
-            cell.appendChild(textNode);
-            row.appendChild(cell);
-        });
-        // let readbutton = document.createElement('button');
-        // readbutton.className = 'readButton';
-        // readbutton.textContent = "Un/Read";
-        // readbutton.addEventListener("mousedown", function() { unread(book.title) });
-        // row.appendChild(readbutton);
+        row.id = `tr-${ToDo.title}`;
+
         let cell = document.createElement('td');
-        let deletebutton = document.createElement('button');
+        let textNode = document.createTextNode(ToDo.title);
+        cell.appendChild(textNode);
+        row.appendChild(cell);
+        cell = document.createElement('td');
+        textNode = document.createTextNode(ToDo.priority);
+        cell.appendChild(textNode);
+        row.appendChild(cell);
+
+
+        cell = document.createElement('td');
+        let expandButton = document.createElement('button');
+        expandButton.className = 'expandButton';
+        expandButton.textContent = "Details";
+
+        expandButton.addEventListener("click", function() { expandToDo(ToDo) });
+        cell.appendChild(expandButton);
+        row.appendChild(cell);
+
+        cell = document.createElement('td');
+        let editButton = document.createElement('button');
+        editButton.className = 'expandButton';
+        editButton.textContent = "Edit";
+
+        editButton.addEventListener("click", function() { editToDo(ToDo) });
+        cell.appendChild(editButton);
+        row.appendChild(cell);
+
+        cell = document.createElement('td');
+        deletebutton = document.createElement('button');
         deletebutton.className = 'deleteButton';
         deletebutton.textContent = "Delete";
 
-        deletebutton.addEventListener("mousedown", function() { deleteToDo(ToDo.title) });
+        deletebutton.addEventListener("click", function() { deleteToDo(ToDo.title) });
         cell.appendChild(deletebutton);
         row.appendChild(cell);
         table.appendChild(row);
@@ -135,6 +153,45 @@ function updateTableTodo(projectId) {
 
     myTable.appendChild(table);
 
+}
+
+function expandToDo(ToDo) {
+    if (document.getElementById(`tr-Expanded-${ToDo.title}`) != null) {
+        document.getElementById(`tr-Expanded-${ToDo.title}`).remove();
+        document.getElementById(`tr-header-${ToDo.title}`).remove();
+    } else {
+        let headers = ['Project Id', 'Description', 'DueDate'];
+
+        let table = document.createElement('table');
+        let headerRow = document.createElement('tr');
+        headerRow.id = `tr-header-${ToDo.title}`;
+
+        headers.forEach(headerText => {
+            let header = document.createElement('th');
+            let textNode = document.createTextNode(headerText);
+            header.appendChild(textNode);
+            headerRow.appendChild(header);
+        });
+        //document.getElementById(`tableExpanded-${ToDo.title}`).appendChild(headerRow);
+        document.getElementById(`tr-${ToDo.title}`).appendChild(headerRow);
+
+        let row = document.createElement('tr');
+        row.id = `tr-Expanded-${ToDo.title}`;
+        let cell = document.createElement('td');
+        let textNode = document.createTextNode(ToDo.projectId);
+        cell.appendChild(textNode);
+        row.appendChild(cell);
+        cell = document.createElement('td');
+        textNode = document.createTextNode(ToDo.description);
+        cell.appendChild(textNode);
+        row.appendChild(cell);
+        cell = document.createElement('td');
+        textNode = document.createTextNode(ToDo.dueDate);
+        cell.appendChild(textNode);
+        row.appendChild(cell);
+        //document.getElementById(`tableExpanded-${ToDo.title}`).appendChild(row);
+        document.getElementById(`tr-${ToDo.title}`).appendChild(row);
+    }
 }
 
 function deletePrevTable() {

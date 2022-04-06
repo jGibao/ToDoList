@@ -8,6 +8,12 @@ td {
     border: 1px solid black;
     padding: 5px;
     font-family: 'Courier New', Courier, monospace;
+    transition: 0.5s;
+}
+
+td:hover {
+    background-color: #daf3ff;
+    transition: 0.5s;
 }
 
 h1 {
